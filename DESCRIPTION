@@ -1,0 +1,25 @@
+Package: three
+Type: Package
+Title: three
+Version: 0.2.1
+Date: 2015-01-04
+Author: Andreas Blaette
+Maintainer: Andreas Blaette <andreas.blaette@uni-due.de>
+Depends:
+    methods
+Imports:
+    rjson
+LazyData: yes
+Description: There is so much to say
+License: CC BY-NC-SA 3.0
+Collate:
+    'polmineR.three-package.R'
+    'as.three-method.R'
+    'utils.R'
+    'three-class.R'
+    'light-method.R'
+    'lines-method.R'
+    'points-method.R'
+    'rescale-method.R'
+    'text-method.R'
+    'three.R'

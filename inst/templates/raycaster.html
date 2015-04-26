@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+		<title>raycaster-template</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="three.min.js"></script>
+    <script src="TrackballControls.js"></script>
+    <script src="jsonDataFile.js"></script>
+
+
+		<script>
+
+			var container, stats;
+			var camera, scene, raycaster, renderer;
+      var controls;
+      var nodeLabel;
+      
+      window.mouseX = 100;
+      window.mouseY = 100;
+      
+      var INTERSECTED, MATCH;
+			var radius = 100, theta = 0;
+
+			init();
+			animate();
+
+			function init() {
+
+        container = document.createElement( 'div' );
+  			document.body.appendChild( container );
+        
+        var info = document.createElement( 'div' );
+      	info.style.position = 'absolute';
+				info.style.top = '10px';
+				info.style.width = '100%';
+				info.style.textAlign = 'left';
+        info.setAttribute("id", "info");
+        info.innerHTML = "empty\nempty";
+				container.appendChild( info );
+
+  			camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+        scene = new THREE.Scene();
+        camera.position.z = 500;
+        
+        scene.add( new THREE.AmbientLight( 0x111111 ) );
+      
+        var pointLight = new THREE.PointLight( 0xffffff, 1, 1200 );
+        pointLight.name = "pointLight";
+        scene.add( pointLight );
+        pointLight.position.set( camera.position.x, camera.position.y, camera.position.z + 10 );
+
+        controls = new THREE.TrackballControls( camera );
+        controls.addEventListener('change', render, false);
+        // controls.addEventListener('mousemove', render, false);
+        
+
+				// var light = new THREE.DirectionalLight( 0xffffff, 1 );
+				// light.position.set( 1, 1, 1 ).normalize();
+				// scene.add( light );
+
+        // addHere
+
+				raycaster = new THREE.Raycaster();
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+				container.appendChild(renderer.domElement);
+
+				window.addEventListener( 'resize', onWindowResize, false );
+        container.addEventListener( 'mousemove', firstMouseMove, false );
+        
+        
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+      
+      function firstMouseMove ( event ) {
+
+  			event.preventDefault();
+
+				window.mouseX = ( event.clientX / window.innerWidth ) * 2 - 1;
+				window.mouseY = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        // document.getElementById("info").innerHTML = "" + camera.position.x;
+        
+
+        
+        render()
+        
+	    }
+
+
+			//
+
+			function animate() {
+				requestAnimationFrame( animate );
+				controls.update();
+        
+        // render();
+			}
+
+			function render() {
+
+				camera.lookAt( scene.position );
+        
+        scene.getObjectByName( "pointLight" ).position.copy( camera.position );
+
+  			var vector = new THREE.Vector3( window.mouseX, window.mouseY, 1 ).unproject( camera );
+
+				raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+				var intersects = raycaster.intersectObjects( scene.children );
+
+				if ( intersects.length > 0 ) {
+
+					for (var i = 0; i < intersects.length; i++){
+        			
+              if (intersects[i].object instanceof THREE.Sprite == false){
+
+                if ( intersects[i].object instanceof THREE.Line ) {
+ 
+                  j = eval(intersects[i].object.id) - 5 - text.length;
+                  var edgeInfo = "edge no: " + j;
+                  var edgeDataColumns = Object.keys(edgeData);
+                  for (var k = 0; k < edgeDataColumns.length; k++){
+                    edgeInfo = edgeInfo + "<br/>" + edgeDataColumns[k] + ": " + edgeData[edgeDataColumns[k]][j];
+                  }
+                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=bt17merkel__node=" + edgeData.a[j] + "__collocate=" + edgeData.b[j];
+                  cgiLink = encodeURI(cgiLink);
+                  edgeInfo = edgeInfo + '<br/>' + '<a href="' + cgiLink + '">' + 'click for kwic!</a>';
+                  document.getElementById("info").innerHTML = edgeInfo;
+                  
+                  
+    			      } else if ( intersects[i].object instanceof THREE.Mesh ) {
+
+                  j = eval(intersects[i].object.id) - 5;
+                  var vertexInfo = text[j];
+                  var vertexDataColumns = Object.keys(vertexData);
+                  for (var k = 0; k < vertexDataColumns.length; k++){
+                    vertexInfo = vertexInfo + "<br/>" + vertexDataColumns[k] + ": " + vertexData[vertexDataColumns[k]][j];
+                  }
+                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=bt17merkel__node=" + text[j];
+                  vertexInfo = vertexInfo + '<br/>' + '<a href="' + cgiLink + '">' + 'click for kwic!</a>';
+                  document.getElementById("info").innerHTML = vertexInfo;
+                
+                
+      		      }
+                MATCH = intersects[i].object
+                break
+        			}
+      		}
+          
+          if ( INTERSECTED != MATCH ) {
+
+						if ( INTERSECTED ) {
+  					  if ( INTERSECTED instanceof THREE.Line ) {
+                INTERSECTED.material.setValues( {color: eval(linesColor) });
+      		    }            
+                if ( INTERSECTED instanceof THREE.Mesh ) {
+                INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+              }              
+						}
+
+						INTERSECTED = MATCH;            
+            if ( INTERSECTED instanceof THREE.Line ) {
+               var currentHex = INTERSECTED.material.color.getHexString();
+               INTERSECTED.material.setValues({color: 0xff0000})
+            } else if ( INTERSECTED instanceof THREE.Mesh ) {
+             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+             INTERSECTED.material.emissive.setHex( 0xff0000 );
+            }
+
+					}
+
+				} else {
+
+					if ( INTERSECTED ) {
+            if ( INTERSECTED instanceof THREE.Line ) {
+              INTERSECTED.material.setValues( {color: eval(linesColor) });
+    			  }            
+            if ( INTERSECTED instanceof THREE.Mesh ) {
+              INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+            }
+            
+					}
+
+					INTERSECTED = null;
+
+				}
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>
+
