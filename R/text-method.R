@@ -5,6 +5,7 @@ NULL
 #' @param x a three object
 #' @param .data a data.frame with three columns providing x/y/z coordinates, and rownames providing text
 #' @param offset offset of the text
+#' @exportMethod text
 #' @rdname three
 setMethod("text", "three", function(x, .data, color="0x000000", size=15, offset=c(x=5, y=5, z=5)){
   color <- toupper(gsub('^0x', '#', color))

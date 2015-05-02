@@ -13,8 +13,6 @@ LazyData: yes
 Description: There is so much to say
 License: CC BY-NC-SA 3.0
 Collate:
-    'polmineR.three-package.R'
-    'as.three-method.R'
     'utils.R'
     'three-class.R'
     'light-method.R'
@@ -22,4 +20,5 @@ Collate:
     'points-method.R'
     'rescale-method.R'
     'text-method.R'
+    'three-package.R'
     'three.R'
