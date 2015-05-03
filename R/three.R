@@ -18,7 +18,7 @@
 #' vis <- three:::text(vis, .data=data.frame(coords, row.names=rownames(mtcars)), color="0xff111111")
 #' vis
 #' }
-three <- function(type="base", bgColor="0x000000", jsUrlPrefix=NULL){
+three <- function(type="base", bgColor="0x000000", jsUrlPrefix=NULL, adjust=list()){
   htmlTemplate <- scan(
     file=system.file("templates", paste(type, ".html", sep=""), package="three"),
     what="character", sep="\n", quiet=TRUE
@@ -34,6 +34,7 @@ three <- function(type="base", bgColor="0x000000", jsUrlPrefix=NULL){
   for (x in c("three.min.js", "TrackballControls.js")) html3d <- gsub(x, jsPath[x], html3d)
   if (type == "anaglyph") html3d <- gsub("AnaglyphEffect.js", jsPath["AnaglyphEffect.js"], html3d)
   if (type == "stereo") html3d <- gsub("StereoEffect.js", jsPath["AnaglyphEffect.js"], html3d)
+  for (adj in names(adjust)) html3d <- gsub(adj, adjust[[adj]], html3d)
   html3d <- gsub(
     "renderer.setClearColor\\(.*?\\);",
     sprintf("renderer.setClearColor(%s, 1);", bgColor),

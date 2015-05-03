@@ -5,6 +5,8 @@
 #' @slot js character, the JavaScript code
 #' @slot json a list with character strings 
 #' @slot type the display mode
+#' @slot threejsDir directory with js files, may be a web folder
+#' @slot htmlDir directory where to put the files
 #' @rdname three-class
 #' @exportClass three
 setClass(
@@ -12,7 +14,9 @@ setClass(
   slots=c(
     js="character",
     json="list",
-    type="character"
+    type="character",
+    threejsDir="character",
+    htmlDir="character"
   )
 )
 

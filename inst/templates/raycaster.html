@@ -145,7 +145,7 @@
                   for (var k = 0; k < edgeDataColumns.length; k++){
                     edgeInfo = edgeInfo + "<br/>" + edgeDataColumns[k] + ": " + edgeData[edgeDataColumns[k]][j];
                   }
-                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=bt17merkel__node=" + edgeData.a[j] + "__collocate=" + edgeData.b[j];
+                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=PARTITION__node=" + edgeData.a[j] + "__collocate=" + edgeData.b[j];
                   cgiLink = encodeURI(cgiLink);
                   edgeInfo = edgeInfo + '<br/>' + '<a href="' + cgiLink + '">' + 'click for kwic!</a>';
                   document.getElementById("info").innerHTML = edgeInfo;
@@ -159,7 +159,7 @@
                   for (var k = 0; k < vertexDataColumns.length; k++){
                     vertexInfo = vertexInfo + "<br/>" + vertexDataColumns[k] + ": " + vertexData[vertexDataColumns[k]][j];
                   }
-                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=bt17merkel__node=" + text[j];
+                  cgiLink = "http://localhost/cgi-bin/R/graph2kwic?partition=PARTITION__node=" + text[j];
                   vertexInfo = vertexInfo + '<br/>' + '<a href="' + cgiLink + '">' + 'click for kwic!</a>';
                   document.getElementById("info").innerHTML = vertexInfo;
                 
