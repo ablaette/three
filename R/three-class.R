@@ -21,32 +21,40 @@ setClass(
 )
 
 #' @exportMethod show
-#' @param object a three object
+#' @param .Object a three object
 #' @rdname three
-setMethod("show", "three", function(object){
-  if (get('session', '.GlobalEnv')@jsDir == ""){
-    tmpFileJs <- tempfile(fileext=".html")  
-    tmpFileJson <- tempfile(fileext=".js")
+setMethod("show", "three", function(.Object){
+  filenames <- store(.Object)
+  browseURL(filenames[1])
+  return(c(tmpFileJs=filenames[1], tmpFileJson=filenames[2]))
+})
+
+setGeneric("store", function(.Object, ...) standardGeneric("store"))
+
+setMethod("store", "three", function(.Object, directory=NULL, filePrefix=NULL){
+  if (is.null(directory)) directory <- tempdir()
+  if (is.null(filePrefix)) {
+    tmpFileJs <- tempfile(fileext=".html", tmpdir=directory)  
+    tmpFileJson <- tempfile(fileext=".js", tmpdir=directory)
     httpFileJson <- tmpFileJson
   } else {
-    tmpFileJs <- tempfile(fileext=".html", tmpdir=get('session', '.GlobalEnv')@jsDir)  
-    tmpFileJson <- tempfile(fileext=".js", tmpdir=get('session', '.GlobalEnv')@jsDir)
+    tmpFileJs <- file.path(directory, paste(filePrefix, ".html", sep=""))
+    tmpFileJson <- file.path(directory, paste(filePrefix, ".js", sep=""))
     jsFilenamePrep <- unlist(strsplit(tmpFileJson, "/"))
-    httpFileJson <- file.path("http://134.91.37.242/js/R", jsFilenamePrep[length(jsFilenamePrep)])
+    httpFileJson <- file.path(directory, jsFilenamePrep[length(jsFilenamePrep)])
   }
   cat(
     paste(
-      unlist(lapply(names(object@json), function(name){ paste(name, " = ", object@json[[name]], ";", sep="") })),
+      unlist(lapply(names(.Object@json), function(name){ paste(name, " = ", .Object@json[[name]], ";", sep="") })),
       collapse="\n"
     ),
     file=tmpFileJson
-    )
-  object@js <- gsub(
+  )
+  .Object@js <- gsub(
     'src="jsonDataFile.js"',
     paste('src="', httpFileJson, '"', sep=""),
-    object@js
-    )
-  cat(object@js, file=tmpFileJs)
-  browseURL(tmpFileJs)
+    .Object@js
+  )
+  cat(.Object@js, file=tmpFileJs)
   return(c(tmpFileJs=tmpFileJs, tmpFileJson=tmpFileJson))
 })
