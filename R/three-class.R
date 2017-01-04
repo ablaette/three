@@ -29,9 +29,10 @@ setMethod("show", "three", function(.Object){
   return(c(tmpFileJs=filenames[1], tmpFileJson=filenames[2]))
 })
 
-setGeneric("store", function(.Object, ...) standardGeneric("store"))
+setGeneric("store", function(object, ...) standardGeneric("store"))
 
-setMethod("store", "three", function(.Object, directory=NULL, filePrefix=NULL){
+#' @exportMethod store
+setMethod("store", "three", function(object, directory=NULL, filePrefix=NULL){
   if (is.null(directory)) directory <- tempdir()
   if (is.null(filePrefix)) {
     tmpFileJs <- tempfile(fileext=".html", tmpdir=directory)  
@@ -45,16 +46,16 @@ setMethod("store", "three", function(.Object, directory=NULL, filePrefix=NULL){
   }
   cat(
     paste(
-      unlist(lapply(names(.Object@json), function(name){ paste(name, " = ", .Object@json[[name]], ";", sep="") })),
+      unlist(lapply(names(object@json), function(name){ paste(name, " = ", object@json[[name]], ";", sep="") })),
       collapse="\n"
     ),
     file=tmpFileJson
   )
-  .Object@js <- gsub(
+  object@js <- gsub(
     'src="jsonDataFile.js"',
     paste('src="', httpFileJson, '"', sep=""),
-    .Object@js
+    object@js
   )
-  cat(.Object@js, file=tmpFileJs)
+  cat(object@js, file=tmpFileJs)
   return(c(tmpFileJs=tmpFileJs, tmpFileJson=tmpFileJson))
 })
