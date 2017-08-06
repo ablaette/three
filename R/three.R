@@ -4,6 +4,7 @@
 #' @param bgColor the background color
 #' @param jsUrlPrefix if not provided, the js files in the package will be linked, if provided
 #' the respective web folder will be referenced
+#' @param adjust named list, names are replaced by value
 #' @rdname three
 #' @aliases light,three-method light
 #' @export three
@@ -19,9 +20,10 @@
 #' vis
 #' }
 three <- function(type="base", bgColor="0x000000", jsUrlPrefix=NULL, adjust=list()){
+  stopifnot( type %in% c("anaglyph", "base", "disco", "raycaster", "rotation", "stereo"))
   htmlTemplate <- scan(
-    file=system.file("templates", paste(type, ".html", sep=""), package="three"),
-    what="character", sep="\n", quiet=TRUE
+    file = system.file("templates", paste(type, ".html", sep = ""), package = "three"),
+    what = "character", sep = "\n", quiet = TRUE
   )
   lookUp <- c("three.min.js", "TrackballControls.js", "AnaglyphEffect.js", "StereoEffect.js")
   if (is.null(jsUrlPrefix)){

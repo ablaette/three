@@ -7,7 +7,8 @@
 #' @slot type the display mode
 #' @slot threejsDir directory with js files, may be a web folder
 #' @slot htmlDir directory where to put the files
-#' @rdname three-class
+#' @aliases store
+#' @rdname three
 #' @exportClass three
 setClass(
   "three",
@@ -21,17 +22,21 @@ setClass(
 )
 
 #' @exportMethod show
-#' @param .Object a three object
+#' @param object a three object
 #' @rdname three
-setMethod("show", "three", function(.Object){
-  filenames <- store(.Object)
+#' @importFrom utils browseURL
+setMethod("show", "three", function(object){
+  filenames <- store(object)
   browseURL(filenames[1])
   return(c(tmpFileJs=filenames[1], tmpFileJson=filenames[2]))
 })
 
 setGeneric("store", function(object, ...) standardGeneric("store"))
 
+#' @param directory evident
+#' @param filePrefix evident, too
 #' @exportMethod store
+#' @rdname three
 setMethod("store", "three", function(object, directory=NULL, filePrefix=NULL){
   if (is.null(directory)) directory <- tempdir()
   if (is.null(filePrefix)) {

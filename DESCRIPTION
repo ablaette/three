@@ -1,8 +1,8 @@
 Package: three
 Type: Package
 Title: three
-Version: 0.2.2
-Date: 2015-12-21
+Version: 0.2.4
+Date: 2017-05-18
 Author: Andreas Blaette
 Maintainer: Andreas Blaette <andreas.blaette@uni-due.de>
 Depends:
@@ -13,12 +13,12 @@ LazyData: yes
 Description: There is so much to say
 License: CC BY-NC-SA 3.0
 Collate:
-    'utils.R'
     'three-class.R'
+    'utils.R'
     'light-method.R'
     'lines-method.R'
     'points-method.R'
-    'rescale-method.R'
     'text-method.R'
     'three-package.R'
     'three.R'
+RoxygenNote: 5.0.1
